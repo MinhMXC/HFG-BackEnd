@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  extend Devise::Models
   include DeviseTokenAuth::Concerns::SetUserByToken
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -7,9 +8,11 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate_admin
-    if user_signed_in?
+    unless user_signed_in?
       error_render({ full_messages: "You are not signed in!" }, :unauthorized)
-    elsif current_user[:is_admin] == 0
+    end
+
+    if current_user[:is_admin] == 0
       error_render({ full_messages: "You do not have the privilege to do this!" }, :unauthorized)
     end
   end

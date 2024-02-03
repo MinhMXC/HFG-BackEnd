@@ -18,4 +18,6 @@ Rails.application.routes.draw do
   delete "attendances", to: "attendances#destroy"
   post "attendances/mark", to: "attendances#mark"
   post "attendances/unmark", to: "attendances#unmark"
+
+  get "/current_user", to: "users#show_simple"
 end

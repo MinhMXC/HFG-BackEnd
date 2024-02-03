@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   def show_simple
-    render json: { status: "success", data: NameOnlyUserSerializer.new(current_user) }, status: :ok
+    render json: { status: "success", data: SimpleUserSerializer.new(current_user).serializable_hash.dig(:data, :attributes) }, status: :ok
   end
 
   def update
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
   end
 
   def success_render(data, status = :ok)
-    render json: { status: "success", data: UserSerializer.new(data).serializable_hash.dig(:data) }, status: status
+    render json: { status: "success", data: UserSerializer.new(data).serializable_hash.dig(:data, :attributes) }, status: status
   end
 
   def user_update_params

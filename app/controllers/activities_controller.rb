@@ -49,6 +49,6 @@ class ActivitiesController < ApplicationController
   end
 
   def success_render(data, status = :ok)
-    render json: { status: "success", data: ActivitySerializer.new(data).serializable_hash.dig(:data) }, status: status
+    render json: { status: "success", data: ActivitySerializer.new(data).serializable_hash.dig(:data, :attributes) }, status: status
   end
 end
