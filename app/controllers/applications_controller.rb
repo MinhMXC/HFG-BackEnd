@@ -1,9 +1,20 @@
 class ApplicationsController < ApplicationController
-  before_action :authenticate
+  # before_action :authenticate
+  #
+  # TODO before action find activity
+
+  def show
+    activity = Activity.find_by(id: params[:id])
+    if activity == nil
+      error_render({ full_messages: "Activity Not Found!" }, :not_found)
+    else
+      applications = Application.where(activity_id: params[:id])
+      render json: { status: "success", data: ApplicationSerializer.new(applications).serializable_hash.dig(:data) }
+    end
+  end
 
   def create
-    @application = Application.new(application_params)
-    @application[:user_id] = current_user[:id]
+    @application = Application.new(user_id: current_user[:id], activity_id: params[:id])
 
     begin
     if @application.save
@@ -17,7 +28,7 @@ class ApplicationsController < ApplicationController
   end
 
   def destroy
-    @application = Application.find_by(application_params)
+    @application = Application.find_by(user_id: current_user[:id], activity_id: params[:id])
 
     unless @application
       error_render({ full_messages: "Application Not Found!" }, :not_found)
@@ -26,10 +37,5 @@ class ApplicationsController < ApplicationController
 
     @application.destroy
     render json: { status: "success", data: {} }, status: :ok
-  end
-
-  private
-  def application_params
-    params.require(:application).permit(:activity_id)
   end
 end

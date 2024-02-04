@@ -1,15 +1,30 @@
 class AttendancesController < ApplicationController
   # before_action :authenticate_admin
 
+  # TODO before action find activity
+
+  def show
+    activity = Activity.find_by(id: params[:id])
+    if activity == nil
+      error_render({ full_messages: "Activity Not Found!" }, :not_found)
+    else
+      attendances = Attendance.where(activity_id: params[:id])
+      render json: { status: "success", data: AttendanceSerializer.new(attendances).serializable_hash.dig(:data) }
+    end
+  end
+
   def create
     error_hash = Hash(nil)
 
-    for user_id in attendance_params[:user_id] do
-      attendance = Attendance.new(user_id: user_id, activity_id: attendance_params[:activity_id])
+    for user_id in attendance_params[:user_ids] do
+      attendance = Attendance.new(user_id: user_id, activity_id: params[:id])
       begin
         unless attendance.save
           error_hash[user_id] = attendance.errors.full_messages
         end
+        Application
+          .find_by(user_id: user_id, activity_id: params[:id])
+          .update_attribute(:accepted, true)
       rescue ActiveRecord::RecordNotUnique
         error_hash[user_id] = "Attendance already created!"
       end
@@ -36,14 +51,14 @@ class AttendancesController < ApplicationController
 
   private
   def attendance_params
-    params.require(:attendance).permit(:activity_id, :user_id => [])
+    params.require(:attendance).permit(:user_ids => [])
   end
 
   def iterate_user_ids(func)
     error_hash = Hash(nil)
 
-    for user_id in attendance_params[:user_id] do
-      @attendance = Attendance.find_by(user_id: user_id, activity_id: attendance_params[:activity_id])
+    for user_id in attendance_params[:user_ids] do
+      @attendance = Attendance.find_by(user_id: user_id, activity_id: params[:id])
       if @attendance
         func.call
       else

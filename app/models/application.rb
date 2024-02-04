@@ -1,4 +1,3 @@
 class Application < ApplicationRecord
-  belongs_to :user
-  belongs_to :activity
+  has_one :user
 end

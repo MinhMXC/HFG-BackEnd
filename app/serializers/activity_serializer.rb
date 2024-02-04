@@ -15,7 +15,10 @@ class ActivitySerializer
     if params[:current_user] == nil || params[:current_user][:is_admin] == false
       nil
     else
-      User.joins(:applications).where(:applications => {:activity_id => activity.id})
+      SimpleUserSerializer
+        .new(User.joins(:applications).where(:applications => {:activity_id => activity.id}))
+        .serializable_hash
+        .dig(:data)
     end
   end
 end
