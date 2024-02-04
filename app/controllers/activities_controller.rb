@@ -1,11 +1,16 @@
 class ActivitiesController < ApplicationController
-  # before_action :authenticate_admin, only: [:create, :update, :destroy]
+  before_action :authenticate_admin, only: [:create, :update, :destroy]
   before_action only: [:show, :update, :destroy] do
     find_activity(params[:id])
   end
 
   def index
-    success_render(Activity.all)
+    render json: {
+      status: "success",
+      data: ActivitySerializer
+              .new(Activity.all, {params: { current_user: current_user }})
+              .serializable_hash.dig(:data)
+    }, status: :ok
   end
 
   def show
@@ -49,6 +54,11 @@ class ActivitiesController < ApplicationController
   end
 
   def success_render(data, status = :ok)
-    render json: { status: "success", data: ActivitySerializer.new(data).serializable_hash.dig(:data, :attributes) }, status: status
+    render json: {
+      status: "success",
+      data: ActivitySerializer
+              .new(data, {params: { current_user: current_user }})
+              .serializable_hash.dig(:data, :attributes)
+    }, status: status
   end
 end

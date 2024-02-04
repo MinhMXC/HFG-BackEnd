@@ -10,10 +10,12 @@ class ApplicationController < ActionController::API
   def authenticate_admin
     unless user_signed_in?
       error_render({ full_messages: "You are not signed in!" }, :unauthorized)
+      return
     end
 
-    if current_user[:is_admin] == 0
+    if current_user[:is_admin] == false
       error_render({ full_messages: "You do not have the privilege to do this!" }, :unauthorized)
+      return
     end
   end
 
@@ -26,6 +28,6 @@ class ApplicationController < ActionController::API
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:full_name, :handphone, :age, :is_male])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation, :full_name, :handphone, :age, :is_male])
   end
 end

@@ -1,10 +1,10 @@
 class ApplicationsController < ApplicationController
-  # before_action :authenticate
-
-  # TODO: Change user_id to current user when frontend is up
+  before_action :authenticate
 
   def create
     @application = Application.new(application_params)
+    @application[:user_id] = current_user[:id]
+
     begin
     if @application.save
       render json: { status: "success", data: {} }, status: :created
@@ -30,6 +30,6 @@ class ApplicationsController < ApplicationController
 
   private
   def application_params
-    params.require(:application).permit(:user_id, :activity_id)
+    params.require(:application).permit(:activity_id)
   end
 end
