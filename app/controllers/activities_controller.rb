@@ -23,7 +23,7 @@ class ActivitiesController < ApplicationController
     if @activity.save
       success_render(@activity, :created)
     else
-      error_render(@activity.errors.full_messages, :bad_request)
+      error_render({full_messages: @activity.errors.full_messages}, :bad_request)
     end
   end
 
@@ -31,7 +31,7 @@ class ActivitiesController < ApplicationController
     if @activity.update(activity_params)
       success_render(@activity)
     else
-      error_render(@activity.errors.full_messages, :bad_request)
+      error_render({full_messages: @activity.errors.full_messages}, :bad_request)
     end
   end
 

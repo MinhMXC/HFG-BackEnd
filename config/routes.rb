@@ -11,15 +11,15 @@ Rails.application.routes.draw do
 
   resources :users, :activities
 
-  get "applications/activity/:id", to: "applications#show"
-  post "applications/activity/:id", to: "applications#create"
-  delete "applications/activity/:id", to: "applications#destroy"
+  get "activity/:id/applications", to: "applications#show"
+  post "activity/:id/applications", to: "applications#create"
+  delete "activity/:id/applications", to: "applications#destroy"
 
-  get "attendances/activity/:id", to: "attendances#show"
-  post "attendances/activity/:id", to: "attendances#create"
-  post "attendances/activity/:id/delete", to: "attendances#destroy"
-  post "attendances/activity/:id/mark", to: "attendances#mark"
-  post "attendances/activity/:id/unmark", to: "attendances#unmark"
+  get "activity/:id/attendances", to: "attendances#show"
+  post "activity/:id/attendances", to: "attendances#create"
+  post "activity/:id/attendances/delete", to: "attendances#destroy"
+  post "activity/:id/attendances/mark", to: "attendances#mark"
+  post "activity/:id/attendances/unmark", to: "attendances#unmark"
 
   get "/current_user", to: "users#show_simple"
 end
