@@ -1,4 +1,4 @@
-class ApplicationSerializer
+class ActivityApplicationSerializer
   include JSONAPI::Serializer
   attributes :accepted, :created_at
 

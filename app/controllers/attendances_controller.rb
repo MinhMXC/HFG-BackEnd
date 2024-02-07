@@ -1,10 +1,27 @@
 class AttendancesController < ApplicationController
-  before_action :authenticate_admin
+  before_action :authenticate_admin, except: [:show_user]
+  before_action :authenticate, only: [:show_user]
   before_action do
     find_activity(params[:id])
   end
 
-  def show
+  def show_user
+    user = User.find_by(id: params[:id])
+    unless user
+      error_render({ full_messages: "User Not Found!" }, :bad_request)
+      return
+    end
+
+    if current_user[:is_admin] == false && Integer(current_user[:id]) != Integer(params[:id])
+      error_render({ full_messages: "You do not have the privilege to do this!}" }, :unauthorized)
+      return
+    end
+
+    attendances = Attendance.where(user_id: params[:id])
+    render json: { status: "success", data: AttendanceSerializer.new(attendances).serializable_hash.dig(:data) }
+  end
+
+  def show_activity
     attendances = Attendance.where(activity_id: @activity[:id])
     render json: { status: "success", data: AttendanceSerializer.new(attendances).serializable_hash.dig(:data) }
   end

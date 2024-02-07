@@ -1,13 +1,33 @@
 class ApplicationsController < ApplicationController
-  before_action :authenticate, only: [:create, :destroy]
-  before_action :authenticate_admin, only: [:show]
-  before_action do
+  before_action :authenticate, only: [:create, :destroy, :show_user]
+  before_action :authenticate_admin, only: [:show_activity]
+  before_action only: [:show, :create, :destroy] do
     find_activity(params[:id])
   end
 
+  def show_user
+    user = User.find_by(id: params[:id])
+    unless user
+      error_render({ full_messages: "User Not Found!" }, :bad_request)
+      return
+    end
+
+    if current_user[:is_admin] == false && Integer(current_user[:id]) != Integer(params[:id])
+      error_render({ full_messages: "You do not have the privilege to do this!" }, :unauthorized)
+      return
+    end
+
+    applications = Application.where(user_id: params[:id])
+    render json: { status: "success", data: UserApplicationSerializer.new(applications).serializable_hash.dig(:data) }
+  end
+
   def show
+
+  end
+
+  def show_activity
     applications = Application.where(activity_id: @activity[:id])
-    render json: { status: "success", data: ApplicationSerializer.new(applications).serializable_hash.dig(:data) }
+    render json: { status: "success", data: ActivityApplicationSerializer.new(applications).serializable_hash.dig(:data) }
   end
 
   def create
