@@ -36,6 +36,8 @@ class ActivitiesController < ApplicationController
   end
 
   def destroy
+    Attendance.where(activity_id: @activity[:id]).destroy_all
+    Application.where(activity_id: @activity[:id]).destroy_all
     @activity.destroy
     render json: { status: "success", data: {} }, status: :ok
   end

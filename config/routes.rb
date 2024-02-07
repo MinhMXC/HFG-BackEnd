@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 
   resources :users, :activities
 
+  post "users/:id/mark_as_administrator", to: "users#mark_as_administrator"
+
+  get "applications", to: "applications#index"
   get "user/:id/applications", to: "applications#show_user"
   get "activity/:id/applications", to: "applications#show_activity"
   post "activity/:id/applications", to: "applications#create"

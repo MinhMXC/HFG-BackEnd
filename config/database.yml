@@ -79,8 +79,11 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# Customised production for docker
 production:
   <<: *default
-  database: hfg_backend_production
-  username: hfg_backend
-  password: <%= ENV["HFG_BACKEND_DATABASE_PASSWORD"] %>
+  adapter: postgresql
+  encoding: unicode
+  host: db
+  username: postgres
+  password: 123456

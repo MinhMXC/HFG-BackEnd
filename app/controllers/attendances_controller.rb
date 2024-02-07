@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   before_action :authenticate_admin, except: [:show_user]
   before_action :authenticate, only: [:show_user]
-  before_action do
+  before_action except: [:show_user] do
     find_activity(params[:id])
   end
 

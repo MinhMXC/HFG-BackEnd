@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  validates :full_name, :handphone, :age, :is_male, presence: true
+  validates :full_name, :handphone, :age, presence: true
+  validates :is_male, inclusion: { in: [ true, false ] }
 
   has_many :applications
   has_many :attendances

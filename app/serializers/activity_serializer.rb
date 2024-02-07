@@ -11,4 +11,12 @@ class ActivitySerializer
       ApplicationSerializer.new(app).serializable_hash.dig(:data, :attributes)
     end
   end
+
+  attributes :is_current_user_admin do |activity, params|
+    if params[:current_user] == nil
+      false
+    else
+      params[:current_user][:is_admin]
+    end
+  end
 end

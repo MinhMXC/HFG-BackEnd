@@ -13,6 +13,13 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
+ENV RAILS_SERVE_STATIC_FILES true
+ENV RAILS_LOG_TO_STDOUT true
+
+# replace with your own key
+ARG RAILS_MASTER_KEY="d53c4648d67ea4f610f560039b763034"
+ENV RAILS_MASTER_KEY=$RAILS_MASTER_KEY
+
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
@@ -56,9 +63,11 @@ RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
+
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
+EXPOSE 5000
 CMD ["./bin/rails", "server"]

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate, only: [:show, :show_simple, :update]
   before_action :authenticate_admin, only: [:index, :mark_as_administrator]
-  before_action only: [:show, :update] do
+  before_action only: [:show, :update, :mark_as_administrator] do
     find_user(params[:id])
   end
 
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
   end
 
   def success_render(data, status = :ok)
-    render json: { status: "success", data: UserSerializer.new(data).serializable_hash.dig(:data, :attributes) }, status: status
+    render json: { status: "success", data: UserSerializer.new(data, { params: { current_user: current_user } }).serializable_hash.dig(:data, :attributes) }, status: status
   end
 
   def user_update_params

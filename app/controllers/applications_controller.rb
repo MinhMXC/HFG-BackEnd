@@ -5,6 +5,11 @@ class ApplicationsController < ApplicationController
     find_activity(params[:id])
   end
 
+  def index
+    applications = Application.all
+    render json: { status: "success", data: ApplicationSerializer.new(applications, { params: { user: true } }).serializable_hash.dig(:data) }
+  end
+
   def show_user
     user = User.find_by(id: params[:id])
     unless user
