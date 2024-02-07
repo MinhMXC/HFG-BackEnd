@@ -10,7 +10,7 @@ User.create!({
   full_name: "Nguyen Quang Minh",
   handphone: 123456789,
   age: 145,
-  is_male: false,
+  is_male: true,
   is_admin: true
 })
 

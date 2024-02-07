@@ -1,7 +1,7 @@
 class ApplicationsController < ApplicationController
   before_action :authenticate, only: [:create, :destroy, :show_user]
   before_action :authenticate_admin, only: [:show_activity]
-  before_action only: [:show, :create, :destroy] do
+  before_action only: [:show, :create, :destroy, :show_activity] do
     find_activity(params[:id])
   end
 
@@ -18,7 +18,7 @@ class ApplicationsController < ApplicationController
     end
 
     applications = Application.where(user_id: params[:id])
-    render json: { status: "success", data: UserApplicationSerializer.new(applications).serializable_hash.dig(:data) }
+    render json: { status: "success", data: ApplicationSerializer.new(applications, { params: { user: true } }).serializable_hash.dig(:data) }
   end
 
   def show
@@ -27,7 +27,7 @@ class ApplicationsController < ApplicationController
 
   def show_activity
     applications = Application.where(activity_id: @activity[:id])
-    render json: { status: "success", data: ActivityApplicationSerializer.new(applications).serializable_hash.dig(:data) }
+    render json: { status: "success", data: ApplicationSerializer.new(applications, { params: { user: false } }).serializable_hash.dig(:data) }
   end
 
   def create

@@ -18,7 +18,7 @@ class AttendancesController < ApplicationController
     end
 
     attendances = Attendance.where(user_id: params[:id])
-    render json: { status: "success", data: AttendanceSerializer.new(attendances).serializable_hash.dig(:data) }
+    render json: { status: "success", data: AttendanceSerializer.new(attendances, { params: { user: true } }).serializable_hash.dig(:data) }
   end
 
   def show_activity

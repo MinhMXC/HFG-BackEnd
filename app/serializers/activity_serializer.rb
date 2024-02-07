@@ -8,7 +8,7 @@ class ActivitySerializer
       nil
     else
       app = Application.find_by(user_id: params[:current_user][:id], activity_id: activity.id )
-      ActivityApplicationSerializer.new(app).serializable_hash.dig(:data, :attributes)
+      ApplicationSerializer.new(app).serializable_hash.dig(:data, :attributes)
     end
   end
 end

@@ -33,11 +33,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_05_180107) do
     t.bigint "created_at"
     t.bigint "updated_at"
     t.boolean "accepted", default: false, null: false
-    t.decimal "id", default: -> { "nextval('application_id'::regclass)" }, null: false
+    t.decimal "id", null: false
     t.index ["activity_id"], name: "index_applications_on_activity_id"
     t.index ["id"], name: "index_applications_on_id", unique: true
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
+
+  execute "CREATE SEQUENCE application_id OWNED BY applications.id"
+  execute "ALTER TABLE applications ALTER COLUMN id SET DEFAULT nextval('application_id')"
 
   create_table "attendances", primary_key: ["user_id", "activity_id"], force: :cascade do |t|
     t.boolean "attended"
