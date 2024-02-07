@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate, only: [:show, :show_simple, :update]
+  before_action :authenticate, only: [:show, :show_current_user, :update]
   before_action :authenticate_admin, only: [:index, :mark_as_administrator]
   before_action only: [:show, :update, :mark_as_administrator] do
     find_user(params[:id])
