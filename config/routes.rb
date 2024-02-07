@@ -26,5 +26,5 @@ Rails.application.routes.draw do
   post "activity/:id/attendances/mark", to: "attendances#mark"
   post "activity/:id/attendances/unmark", to: "attendances#unmark"
 
-  get "/current_user", to: "users#show_simple"
+  get "/current_user", to: "users#show_current_user"
 end

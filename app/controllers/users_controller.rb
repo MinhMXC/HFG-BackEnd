@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def show_simple
+  def show_current_user
     render json: { status: "success", data: SimpleUserSerializer.new(current_user).serializable_hash.dig(:data, :attributes) }, status: :ok
   end
 
